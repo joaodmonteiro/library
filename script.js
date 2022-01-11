@@ -1,90 +1,100 @@
-// Initialize library array
-let myLibrary = [];
-
 let body = document.body;
 
-// Book constructor
-function Book(name, author) {
-    this.name = name;
-    this.author = author;
-}
-
-// Create new book
-function addBookToLibrary(nome, autor) {
-    myLibrary.push(new Book(nome, autor));
-}
-
-addBookToLibrary('asdasd', 'joao');
-addBookToLibrary('maria sul', 'rui');
-addBookToLibrary('fado', 'camane');
-addBookToLibrary('s', 'camane');
-addBookToLibrary('s', 'camane');
-addBookToLibrary('s', 'camane');
-
-console.table(myLibrary);
+// Initialize library array
+let myLibrary = [];
 
 // Container for the book cards
 let libraryContainer = document.querySelector(".library");
 
-// Create a card for each of the books in the library(array)
-myLibrary.forEach(book => {
-    let bookCard = document.createElement('div');
-    bookCard.id = myLibrary.indexOf(book);
-    bookCard.classList.add('card');
+// Book constructor
+function Book(title, author, pages, read) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+}
 
-    let bookName = document.createElement('h2')
-    bookName.textContent = book.name;
+// Create a card to display each of the books in the library(array)
+function DisplayLibrary() {
+    libraryContainer.innerHTML = "";
+    myLibrary.forEach(book => {
+        let bookCard = document.createElement('div');
+        bookCard.id = myLibrary.indexOf(book);
+        bookCard.classList.add('card');
+    
+        let bookTitle = document.createElement('h2')
+        bookTitle.textContent = book.title;
+    
+        let authorName = document.createElement('p');
+        authorName.textContent = `by ${book.author}`;
+    
+        let numberOfPages = document.createElement('p');
+        numberOfPages.textContent = `${book.pages} pages`;
+    
+        let readInfo = document.createElement('p');
+        if(book.read)
+            readInfo.textContent = "Read";
+        else
+            readInfo.textContent = "Not read";
+    
+        let deleteButton = document.createElement('button');
+        deleteButton.textContent = "Delete";
+        deleteButton.id = bookCard.id;
+    
+        bookCard.appendChild(bookTitle);
+        bookCard.appendChild(authorName);
+        bookCard.appendChild(numberOfPages);
+        bookCard.appendChild(readInfo);
+        bookCard.appendChild(deleteButton);
+        libraryContainer.appendChild(bookCard);  
+    
+        deleteButton.addEventListener("click", function() {
+            deleteBook(this.id);
+            console.table(myLibrary);
+            DisplayLibrary();
+        });
+    }); 
+}
+// Create new book
+function addBookToLibrary(title, author, pages, read) {
+    myLibrary.push(new Book(title, author, pages, read));
+}
 
-    let authorName = document.createElement('p');
-    authorName.textContent = `by ${book.author}`;
-
-    bookCard.appendChild(bookName);
-    bookCard.appendChild(authorName);
-    libraryContainer.appendChild(bookCard);  
-}); 
+// Delete book from library
+function deleteBook(index) {
+    myLibrary.splice(index, 1);
+}
 
 // Open 'new book' form
-let newBookButton = document.querySelector(".newBook");
-newBookButton.addEventListener("click", function () {
-
+function openForm() {
     // Display Form
-    let formContainer = document.querySelector('.formContainer')
+    let formContainer = document.querySelector('.formContainer');
+    formContainer.innerHTML = "";
     formContainer.style.display = 'flex';
+    formContainer.textContent = "Book Details";
     
     // Title of the book
     let titleTextBox = document.createElement('input');
     titleTextBox.name = "title";
     titleTextBox.id = "title";
+    titleTextBox.placeholder = "Title";
 
-    let labelTitleTextBox = document.createElement('label');
-    labelTitleTextBox.textContent = "Title:";
-    labelTitleTextBox.setAttribute("for", "title");
-
-    formContainer.appendChild(labelTitleTextBox);
     formContainer.appendChild(titleTextBox);  
 
     // Author of the book
     let authorTextBox = document.createElement('input');
     authorTextBox.name = "author";
     authorTextBox.id = "author";
+    authorTextBox.placeholder = "Author";
 
-    let labelAuthorTextBox = document.createElement('label');
-    labelAuthorTextBox.textContent = "Author:";
-    labelAuthorTextBox.setAttribute("for", "author");
-
-    formContainer.appendChild(labelAuthorTextBox);
     formContainer.appendChild(authorTextBox);
 
     // How many pages
     let pagesTextBox = document.createElement('input');
     pagesTextBox.name = "pages";
     pagesTextBox.id = "pages";
+    pagesTextBox.placeholder = "Number of pages";
 
-    let labelPagesTextBox = document.createElement('label');
-    labelPagesTextBox.textContent = "Pages:";
-    labelPagesTextBox.setAttribute("for", "pages");
-
-    formContainer.appendChild(labelPagesTextBox);
     formContainer.appendChild(pagesTextBox);
 
     // If book has been read
@@ -94,7 +104,7 @@ newBookButton.addEventListener("click", function () {
     readCheckBox.id = "read";
 
     let labelReadCheckbox = document.createElement('label');
-    labelReadCheckbox.textContent = "Read:";
+    labelReadCheckbox.textContent = "Have you read it?";
     labelReadCheckbox.setAttribute("for", "read");
 
     formContainer.appendChild(labelReadCheckbox);
@@ -103,7 +113,33 @@ newBookButton.addEventListener("click", function () {
     // Submit new book
     let submitButton = document.createElement('button');
     submitButton.textContent = "Add";
-
     formContainer.appendChild(submitButton);
+
+    submitButton.addEventListener("click", function() {
+        if(!titleTextBox.value || !authorTextBox.value || !pagesTextBox.value)
+            alert("Missing details!");
+        else {
+            addBookToLibrary(titleTextBox.value, authorTextBox.value, pagesTextBox.value, readCheckBox.checked);
+            DisplayLibrary();
+            formContainer.style.display = 'none';
+        }      
+    });
+}
+
+addBookToLibrary('A vida e a morte', 'joao', 56, true);
+addBookToLibrary('Vida', 'joao', 56, true);
+addBookToLibrary('O pecado esta la fora', 'joao', 6, true);
+addBookToLibrary('asdasd', 'joao', 56, true);
+addBookToLibrary('asdasd', 'joao', 56, true);
+addBookToLibrary('asdasd', 'joao', 56, false);
+
+console.table(myLibrary);
+
+DisplayLibrary();
+
+// Open 'new book' form
+let newBookButton = document.querySelector(".newBook");
+newBookButton.addEventListener("click", function () {
+    openForm();
 });
 
