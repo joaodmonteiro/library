@@ -1,5 +1,3 @@
-let body = document.body;
-
 // Initialize library array
 let myLibrary = [];
 
@@ -126,6 +124,7 @@ function openForm() {
     });
 }
 
+// Adding some books to the array for testing purposes
 addBookToLibrary('A vida e a morte', 'joao', 56, true);
 addBookToLibrary('Vida', 'joao', 56, true);
 addBookToLibrary('O pecado esta la fora', 'joao', 6, true);
@@ -137,9 +136,19 @@ console.table(myLibrary);
 
 DisplayLibrary();
 
-// Open 'new book' form
+// 'Add new book' button
 let newBookButton = document.querySelector(".newBook");
 newBookButton.addEventListener("click", function () {
     openForm();
 });
+
+// Close 'new book' form if clicked out
+document.addEventListener("click", function(event) {
+    if(!event.target.closest(".formContainer") && !event.target.classList.contains("newBook") )
+    {
+        document.querySelector('.formContainer').style.display = 'none';
+    }
+});
+
+
 
