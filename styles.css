@@ -11,9 +11,10 @@ body {
 .library {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
     .library {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -23,6 +24,7 @@ body {
     border: 1px solid black;
     text-align: center;
     min-width: 100px;
+    padding: 10px;
 }
 
 button {

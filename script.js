@@ -29,7 +29,7 @@ function DisplayLibrary() {
         let numberOfPages = document.createElement('p');
         numberOfPages.textContent = `${book.pages} pages`;
     
-        let readInfo = document.createElement('p');
+        let readInfo = document.createElement('button');
         if(book.read)
             readInfo.textContent = "Read";
         else
@@ -51,8 +51,21 @@ function DisplayLibrary() {
             console.table(myLibrary);
             DisplayLibrary();
         });
+
+        readInfo.addEventListener("click", function() {
+            if(readInfo.textContent == "Read") {
+                readInfo.textContent = "Not read";
+                book.read = false;
+            }   
+            else {
+                readInfo.textContent = "Read";
+                book.read = true;
+            }
+            console.table(myLibrary);
+        });
     }); 
 }
+
 // Create new book
 function addBookToLibrary(title, author, pages, read) {
     myLibrary.push(new Book(title, author, pages, read));
